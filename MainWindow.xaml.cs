@@ -1,5 +1,4 @@
-﻿using Skill_visualization;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,28 +25,6 @@ namespace KeyWordsVisualizer
             InitializeComponent();
             DataAccess myDataAccess = new DataAccess();
             myDataAccess.createDbFile();
-            this.InitializeComponent();
-            Output.ItemsSource = DataAccess.GetCollabList();
         }
-
-        private void AddCollab(object sender, RoutedEventArgs e)
-        {
-            Collab myCollab = new Collab
-            {
-                Name = collabNameInput.Text,
-                Resume = collabResumeInput.Text,
-            };
-
-            string[] skillName = collabSkillInput.Text.Split(',');
-
-            DataAccess.AddCollab(myCollab, skillName);
-
-            Output.ItemsSource = DataAccess.GetCollabList();
-
-            collabNameInput.Text = "";
-            collabResumeInput.Text = "";
-            collabSkillInput.Text = "";
-        }
-    }
     }
 }
