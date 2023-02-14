@@ -23,7 +23,7 @@
                 <TextBox x:Name="collabResumeInput" HorizontalAlignment="Right" Margin="0,44,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="0.495,0.775" Width="250" Height="75"/>
                 <TextBlock HorizontalAlignment="Left" Margin="0,139,0,0" TextWrapping="Wrap" Text="Compétences" VerticalAlignment="Top"/>
                 <TextBox x:Name="collabSkillInput" HorizontalAlignment="Right" Margin="0,134,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="0.495,0.775" Width="250"/>
-                <Button x:Name="buttonCollab" Content="Ajouter Collaborateur" Width="154" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,148,53,0" />
+                <Button x:Name="buttonCollab" Content="Ajouter Collaborateur" Width="154" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,148,53,0"/>
             </Grid>
             <Grid Width="350" Height="245">
                 <TextBlock TextWrapping="Wrap" Text="Nom" Margin="0,2,0,0"/>
