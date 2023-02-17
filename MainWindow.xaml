@@ -11,7 +11,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0"  TextWrapping="Wrap" Text="Outil de visualisation des compétences ESTIA" FontWeight="Bold" FontSize="36"/>
         <TextBlock Grid.Row="1" TextWrapping="Wrap" Text="Formulaire d'entrée"/>
@@ -23,7 +25,7 @@
                 <TextBox x:Name="collabResumeInput" HorizontalAlignment="Right" Margin="0,44,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="0.495,0.775" Width="250" Height="75"/>
                 <TextBlock HorizontalAlignment="Left" Margin="0,139,0,0" TextWrapping="Wrap" Text="Compétences" VerticalAlignment="Top"/>
                 <TextBox x:Name="collabSkillInput" HorizontalAlignment="Right" Margin="0,134,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="0.495,0.775" Width="250"/>
-                <Button x:Name="buttonCollab" Content="Ajouter Collaborateur" Width="154" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,148,53,0"/>
+                <Button x:Name="buttonCollab" Content="Ajouter Collaborateur" Width="154" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,148,53,0" Click="AddCollab"/>
             </Grid>
             <Grid Width="350" Height="245">
                 <TextBlock TextWrapping="Wrap" Text="Nom" Margin="0,2,0,0"/>
@@ -32,7 +34,7 @@
                 <TextBox x:Name="projectDescInput" HorizontalAlignment="Right" Margin="0,44,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="2.8,0.324" Height="75" Width="250"/>
                 <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Nom d'un collaborateur" VerticalAlignment="Top" Height="36" Width="90" Margin="0,134,0,0"/>
                 <TextBox x:Name="ProjectCollabName" HorizontalAlignment="Right" Margin="0,134,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="2.8,0.324" Width="250"/>
-                <Button x:Name="buttonProject" Content="Ajouter Projet" VerticalAlignment="Bottom" Height="33" Margin="0,148,72,0" HorizontalAlignment="Right"/>
+                <Button x:Name="buttonProject" Content="Ajouter Projet" VerticalAlignment="Bottom" Height="33" Margin="0,148,72,0" HorizontalAlignment="Right" Click="AddProject"/>
             </Grid>
             <Grid Width="350" Height="245">
                 <TextBlock TextWrapping="Wrap" Text="Nom" Margin="0,2,0,0"/>
@@ -42,15 +44,23 @@
                 <TextBlock HorizontalAlignment="Left" Margin="0,96,0,0" TextWrapping="Wrap" Text="Collaborateur" VerticalAlignment="Top"/>
                 <TextBox x:Name="skillCollabInput" HorizontalAlignment="Right" Margin="0,96,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="0.495,0.775" Width="250"/>
                 <TextBlock Text="Projet" TextWrapping="Wrap" Margin="0,142,0,0"/>
-                <TextBox x:Name="skillPorjectInput" Width="250" HorizontalAlignment="Right" VerticalAlignment="Top" Text="" TextWrapping="Wrap" Margin="0,142,0,0"/>
-                <Button x:Name="buttonSkill" Content="Ajouter Compétence" Width="154" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,148,53,0" />
+                <TextBox x:Name="skillProjectInput" Width="250" HorizontalAlignment="Right" VerticalAlignment="Top" Text="" TextWrapping="Wrap" Margin="0,142,0,0"/>
+                <Button x:Name="buttonSkill" Content="Ajouter Compétence" Width="154" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,148,53,0" Click="AddSkill"/>
             </Grid>
             <Grid Width="350" Height="245">
                 <TextBlock Text="Nom" TextWrapping="Wrap" Margin="0,2,0,0"/>
                 <TextBox x:Name="suppCollabInput" HorizontalAlignment="Right" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="0,2,0,0" Width="250"/>
-                <Button x:Name="buttonSupp" Content="Supprimer un collaborateur" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,148,53,0"/>
+                <Button x:Name="buttonSupp" Content="Supprimer un collaborateur" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,148,53,0" Click="SuppCollab"/>
             </Grid>
-
         </WrapPanel>
+        <TextBlock Grid.Row="3" Text="Collaborateurs" TextWrapping="Wrap"/>
+        <ListView Name="Output" Grid.Row="4" Height="300">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button Content="Visualisation du nuage de compétence" VerticalAlignment="Top" HorizontalAlignment="Center" Width="500" Click="Button_Click"/>
     </Grid>
 </Window>
