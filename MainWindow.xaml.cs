@@ -24,8 +24,8 @@ namespace KeyWordsVisualizer
         public MainWindow()
         {
             this.InitializeComponent();
-            DataAccess.createDbFile();
-            Output.ItemsSource = DataAccess.GetCollabList();
+            DataAccess.InitializeDatabase();
+            //Output.ItemsSource = DataAccess.GetCollabList();
         }
         private void AddCollab(object sender, RoutedEventArgs e)
         {
