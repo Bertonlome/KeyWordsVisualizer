@@ -27,7 +27,7 @@ namespace KeyWordsVisualizer
             if (!System.IO.File.Exists(dbFilePath))
             {
                 SQLiteConnection.CreateFile(dbFilePath);
-            }
+            } 
         }
 
         public string createDbConnection()

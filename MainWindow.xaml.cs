@@ -25,6 +25,31 @@ namespace KeyWordsVisualizer
             InitializeComponent();
             DataAccess myDataAccess = new DataAccess();
             myDataAccess.createDbFile();
+<<<<<<< HEAD
+            this.InitializeComponent();
+            //Output.ItemsSource = DataAccess.GetCollabList();
+        }
+
+        private void AddCollab(object sender, RoutedEventArgs e)
+        {
+            Collab myCollab = new Collab
+            {
+                Name = collabNameInput.Text,
+                Resume = collabResumeInput.Text,
+            };
+
+            string[] skillName = collabSkillInput.Text.Split(',');
+
+            //DataAccess.AddCollab(myCollab, skillName);
+
+            //Output.ItemsSource = DataAccess.GetCollabList();
+
+            collabNameInput.Text = "";
+            collabResumeInput.Text = "";
+            collabSkillInput.Text = "";
         }
     }
-}
+=======
+        }
+>>>>>>> 07665ddf255e1a4d7cebc1d7b335da2d6540cd8d
+    }
