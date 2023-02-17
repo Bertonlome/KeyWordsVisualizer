@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Skill_visualization
+namespace KeyWordsVisualizer
 {
     public class Collab
     {

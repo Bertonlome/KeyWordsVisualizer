@@ -25,7 +25,6 @@ namespace KeyWordsVisualizer
             InitializeComponent();
             DataAccess myDataAccess = new DataAccess();
             myDataAccess.createDbFile();
-<<<<<<< HEAD
             this.InitializeComponent();
             //Output.ItemsSource = DataAccess.GetCollabList();
         }
@@ -49,7 +48,4 @@ namespace KeyWordsVisualizer
             collabSkillInput.Text = "";
         }
     }
-=======
-        }
->>>>>>> 07665ddf255e1a4d7cebc1d7b335da2d6540cd8d
-    }
+}
