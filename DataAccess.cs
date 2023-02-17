@@ -11,15 +11,16 @@ using System.Threading.Tasks;
 
 namespace KeyWordsVisualizer
 {
-    internal class DataAccess
+    public static class DataAccess
     {
-        SQLiteConnection dbConnection;
-        SQLiteCommand command;
-        string sqlCommand;
-        string dbPath = System.Environment.CurrentDirectory + "\\DB";
-        string dbFilePath;
-        public void createDbFile()
+        static SQLiteConnection dbConnection;
+        static SQLiteCommand command;
+        static string sqlCommand;
+        static string dbPath = System.Environment.CurrentDirectory + "\\DB";
+        static string dbFilePath;
+        public static void createDbFile()
         {
+            
             if (!string.IsNullOrEmpty(dbPath) && !Directory.Exists(dbPath))
                 Directory.CreateDirectory(dbPath);
             dbFilePath = dbPath + "\\yourDb.db";
@@ -29,7 +30,7 @@ namespace KeyWordsVisualizer
             } 
         }
 
-        public string createDbConnection()
+        public static string createDbConnection()
         {
             string strCon = string.Format("Data Source={0};", dbFilePath);
             dbConnection = new SQLiteConnection(strCon);
@@ -37,7 +38,7 @@ namespace KeyWordsVisualizer
             command = dbConnection.CreateCommand();
             return strCon;
         }
-        public async void InitializeDatabase()
+        public async static void InitializeDatabase()
         { 
             using (SqliteConnection db = new SqliteConnection($"Filename={dbFilePath}"))
             {
@@ -97,7 +98,7 @@ namespace KeyWordsVisualizer
             }
         }
 
-        public List<String> GetCollabList()
+        public static List<String> GetCollabList()
         {
             {
                 List<String> entries = new List<string>();
@@ -141,7 +142,7 @@ namespace KeyWordsVisualizer
             }
         }
 
-        public List<string> GetAllSkillsList()
+        public static List<string> GetAllSkillsList()
         {
             Dictionary<int, string> skillId = new Dictionary<int, string>();
             List<string> skillList = new List<string>();
@@ -186,7 +187,7 @@ namespace KeyWordsVisualizer
         }
 
 
-        public int GetCollabByName(string name)
+        public static int GetCollabByName(string name)
         {
             List<int> entries = new List<int>();
             int myId = -1;
@@ -211,7 +212,7 @@ namespace KeyWordsVisualizer
 
         }
 
-        public List<String> GetSkillsListByCollabId(int collabId)
+        public static List<String> GetSkillsListByCollabId(int collabId)
         {
             List<String> skillsList = new List<String>();
 
@@ -252,7 +253,7 @@ namespace KeyWordsVisualizer
 
         }
 
-        public List<String> GetProjectListByCollabId(int collabId)
+        public static List<String> GetProjectListByCollabId(int collabId)
         {
             List<String> projectList = new List<String>();
 
@@ -293,7 +294,7 @@ namespace KeyWordsVisualizer
 
         }
 
-        public int GetProjectByName(string name)
+        public static int GetProjectByName(string name)
         {
             int myId = -1;
             using (SqliteConnection db =
@@ -316,7 +317,7 @@ namespace KeyWordsVisualizer
             return myId;
 
         }
-        public int GetSkillByName(string name)
+        public static int GetSkillByName(string name)
         {
             int myId = -1;
             using (SqliteConnection db =
@@ -342,7 +343,7 @@ namespace KeyWordsVisualizer
         }
 
 
-        public void AddCollab(Collab myCollab, string[] skillName)
+        public static void AddCollab(Collab myCollab, string[] skillName)
         {
             {
                 using (SqliteConnection db =
@@ -400,7 +401,7 @@ namespace KeyWordsVisualizer
             }
         }
 
-        public bool SkillExist(string skillName)
+        public static bool SkillExist(string skillName)
         {
             bool isExisting = false;
             {
@@ -428,7 +429,7 @@ namespace KeyWordsVisualizer
             return isExisting;
         }
 
-        public bool CollabExist(string collabName)
+        public static bool CollabExist(string collabName)
         {
             bool isExisting = false;
             {
@@ -455,7 +456,7 @@ namespace KeyWordsVisualizer
             return isExisting;
         }
 
-        public bool projectExist(string projectName)
+        public static bool projectExist(string projectName)
         {
             bool isExisting = false;
             {
@@ -483,7 +484,7 @@ namespace KeyWordsVisualizer
             return isExisting;
         }
 
-        public void AddProject(Project myProject, string[] collabName)
+        public static void AddProject(Project myProject, string[] collabName)
         {
             {
                 using (SqliteConnection db =
@@ -524,7 +525,7 @@ namespace KeyWordsVisualizer
             }
         }
 
-        public void AddSkill(Skill mySkill, string[] collabName, string[] projectName)
+        public static void AddSkill(Skill mySkill, string[] collabName, string[] projectName)
         {
             {
                 using (SqliteConnection db =
@@ -581,7 +582,7 @@ namespace KeyWordsVisualizer
 
         }
 
-        public void SuppCollab(string collabName)
+        public static void SuppCollab(string collabName)
         {
             using (SqliteConnection db =
                 new SqliteConnection($"Filename={dbPath}"))

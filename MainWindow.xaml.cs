@@ -24,8 +24,7 @@ namespace KeyWordsVisualizer
         public MainWindow()
         {
             this.InitializeComponent();
-            DataAccess myDataAccess = new DataAccess();
-            myDataAccess.createDbFile();
+            DataAccess.createDbFile();
             Output.ItemsSource = DataAccess.GetCollabList();
         }
         private void AddCollab(object sender, RoutedEventArgs e)
@@ -98,7 +97,7 @@ namespace KeyWordsVisualizer
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            this.Name.Navigate(typeof(WordCloudPage));
+            //this.Name.Navigate(typeof(WordCloudPage));
         }
 
     }
