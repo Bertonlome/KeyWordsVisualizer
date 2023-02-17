@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Azure.Storage;
+using Windows.Storage;
 using System.Threading.Tasks;
 
 namespace KeyWordsVisualizer
