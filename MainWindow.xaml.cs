@@ -32,6 +32,7 @@ namespace KeyWordsVisualizer
             Collab myCollab = new Collab
             {
                 Name = collabNameInput.Text,
+                FirstName = collabFirstNameInput.Text,
                 Resume = collabResumeInput.Text,
             };
 
@@ -42,6 +43,7 @@ namespace KeyWordsVisualizer
             Output.ItemsSource = DataAccess.GetCollabList();
 
             collabNameInput.Text = "";
+            collabFirstNameInput.Text = "";
             collabResumeInput.Text = "";
             collabSkillInput.Text = "";
         }

@@ -48,6 +48,7 @@ namespace KeyWordsVisualizer
                 String tableCommand = "CREATE TABLE IF NOT " +
                     "EXISTS Collab (ID INTEGER PRIMARY KEY NOT NULL, " +
                     "Name NVARCHAR(2048) NOT NULL UNIQUE, " +
+                    "FirstName NVARCHAR(2048) NOT NULL, " +
                     "Resume NVARCHAR(2048) NULL " +
                     ")";
 
@@ -104,13 +105,14 @@ namespace KeyWordsVisualizer
             {
                 List<String> entries = new List<string>();
 
-                using (SQLiteConnection db =
-                   new SQLiteConnection($"Filename={dbFilePath}"))
+                createDbFile();
+                string strCon = createDbConnection();
+                using (SQLiteConnection db = new SQLiteConnection(strCon))
                 {
                     db.Open();
 
                     SQLiteCommand selectCommand = new SQLiteCommand
-                        ("SELECT ID, Name, Resume from Collab", db);
+                        ("SELECT ID, Name, FirstName, Resume from Collab", db);
 
                     SQLiteDataReader query = selectCommand.ExecuteReader();
 
@@ -118,7 +120,7 @@ namespace KeyWordsVisualizer
                     {
                         int currentID = query.GetInt32(0);
                         string nameSkill = "";
-                        entries.Add(query.GetString(1) + "  |  " + query.GetString(2));
+                        entries.Add(query.GetString(1) + "  |  " + query.GetString(2) + "  |  " + query.GetString(3));
                         List<String> skillsList = GetSkillsListByCollabId(currentID);
                         string aggregateSkillList = "";
                         foreach (string skill in skillsList)
@@ -149,8 +151,9 @@ namespace KeyWordsVisualizer
             List<string> skillList = new List<string>();
             List<int> skillsIdList = new List<int>();
 
-            using (SQLiteConnection db =
-                new SQLiteConnection($"Filename={dbPath}"))
+            createDbFile();
+            string strCon = createDbConnection();
+            using (SQLiteConnection db = new SQLiteConnection(strCon))
             {
                 db.Open();
 
@@ -192,8 +195,9 @@ namespace KeyWordsVisualizer
         {
             List<int> entries = new List<int>();
             int myId = -1;
-            using (SQLiteConnection db =
-               new SQLiteConnection($"Filename={dbPath}"))
+            createDbFile();
+            string strCon = createDbConnection();
+            using (SQLiteConnection db = new SQLiteConnection(strCon))
             {
                 db.Open();
 
@@ -217,8 +221,9 @@ namespace KeyWordsVisualizer
         {
             List<String> skillsList = new List<String>();
 
-            using (SQLiteConnection db =
-               new SQLiteConnection($"Filename={dbPath}"))
+            createDbFile();
+            string strCon = createDbConnection();
+            using (SQLiteConnection db = new SQLiteConnection(strCon))
             {
                 db.Open();
                 List<int> idSkill = new List<int>();
@@ -258,8 +263,9 @@ namespace KeyWordsVisualizer
         {
             List<String> projectList = new List<String>();
 
-            using (SQLiteConnection db =
-               new SQLiteConnection($"Filename={dbPath}"))
+            createDbFile();
+            string strCon = createDbConnection();
+            using (SQLiteConnection db = new SQLiteConnection(strCon))
             {
                 db.Open();
                 List<int> idProject = new List<int>();
@@ -298,8 +304,9 @@ namespace KeyWordsVisualizer
         public static int GetProjectByName(string name)
         {
             int myId = -1;
-            using (SQLiteConnection db =
-               new SQLiteConnection($"Filename={dbPath}"))
+            createDbFile();
+            string strCon = createDbConnection();
+            using (SQLiteConnection db = new SQLiteConnection(strCon))
             {
                 db.Open();
 
@@ -321,8 +328,9 @@ namespace KeyWordsVisualizer
         public static int GetSkillByName(string name)
         {
             int myId = -1;
-            using (SQLiteConnection db =
-               new SQLiteConnection($"Filename={dbPath}"))
+            createDbFile();
+            string strCon = createDbConnection();
+            using (SQLiteConnection db = new SQLiteConnection(strCon))
             {
                 db.Open();
 
@@ -347,8 +355,9 @@ namespace KeyWordsVisualizer
         public static void AddCollab(Collab myCollab, string[] skillName)
         {
             {
-                using (SQLiteConnection db =
-                  new SQLiteConnection($"Filename={dbPath}"))
+                createDbFile();
+                string strCon = createDbConnection();
+                using (SQLiteConnection db = new SQLiteConnection(strCon))
                 {
                     db.Open();
 
@@ -358,8 +367,9 @@ namespace KeyWordsVisualizer
                         insertCommand.Connection = db;
 
                         // Use parameterized query to prevent SQL injection attacks
-                        insertCommand.CommandText = "INSERT INTO Collab VALUES (NULL, @nameEntry, @resumeEntry);";
+                        insertCommand.CommandText = "INSERT INTO Collab VALUES (NULL, @nameEntry, @firstNameEntry, @resumeEntry);";
                         insertCommand.Parameters.AddWithValue("@nameEntry", myCollab.Name);
+                        insertCommand.Parameters.AddWithValue("@firstNameEntry", myCollab.FirstName);
                         insertCommand.Parameters.AddWithValue("@resumeEntry", myCollab.Resume);
 
                         insertCommand.ExecuteReader();
@@ -406,8 +416,9 @@ namespace KeyWordsVisualizer
         {
             bool isExisting = false;
             {
-                using (SQLiteConnection db =
-                  new SQLiteConnection($"Filename={dbPath}"))
+                createDbFile();
+                string strCon = createDbConnection();
+                using (SQLiteConnection db = new SQLiteConnection(strCon))
                 {
                     db.Open();
 
@@ -434,7 +445,9 @@ namespace KeyWordsVisualizer
         {
             bool isExisting = false;
             {
-                using (SQLiteConnection db = new SQLiteConnection($"Filename={dbPath}"))
+                createDbFile();
+                string strCon = createDbConnection();
+                using (SQLiteConnection db = new SQLiteConnection(strCon))
                 {
                     db.Open();
 
@@ -461,8 +474,9 @@ namespace KeyWordsVisualizer
         {
             bool isExisting = false;
             {
-                using (SQLiteConnection db =
-                  new SQLiteConnection($"Filename={dbPath}"))
+                createDbFile();
+                string strCon = createDbConnection();
+                using (SQLiteConnection db = new SQLiteConnection(strCon))
                 {
                     db.Open();
 
@@ -488,8 +502,9 @@ namespace KeyWordsVisualizer
         public static void AddProject(Project myProject, string[] collabName)
         {
             {
-                using (SQLiteConnection db =
-                  new SQLiteConnection($"Filename={dbPath}"))
+                createDbFile();
+                string strCon = createDbConnection();
+                using (SQLiteConnection db = new SQLiteConnection(strCon))
                 {
                     db.Open();
 
@@ -529,8 +544,9 @@ namespace KeyWordsVisualizer
         public static void AddSkill(Skill mySkill, string[] collabName, string[] projectName)
         {
             {
-                using (SQLiteConnection db =
-                  new SQLiteConnection($"Filename={dbPath}"))
+                createDbFile();
+                string strCon = createDbConnection();
+                using (SQLiteConnection db = new SQLiteConnection(strCon))
                 {
                     db.Open();
 
@@ -585,8 +601,9 @@ namespace KeyWordsVisualizer
 
         public static void SuppCollab(string collabName)
         {
-            using (SQLiteConnection db =
-                new SQLiteConnection($"Filename={dbPath}"))
+            createDbFile();
+            string strCon = createDbConnection();
+            using (SQLiteConnection db = new SQLiteConnection(strCon))
             {
                 db.Open();
 

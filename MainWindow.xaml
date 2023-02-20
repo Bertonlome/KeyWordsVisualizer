@@ -21,10 +21,12 @@
             <Grid Width="350" Height="245">
                 <TextBlock TextWrapping="Wrap" Text="Nom" Margin="0,2,0,0"/>
                 <TextBox x:Name="collabNameInput" Width="250" HorizontalAlignment="Right" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="CV résumé" VerticalAlignment="Top" Margin="0,68,0,0"/>
-                <TextBox x:Name="collabResumeInput" HorizontalAlignment="Right" Margin="0,44,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="0.495,0.775" Width="250" Height="75"/>
-                <TextBlock HorizontalAlignment="Left" Margin="0,139,0,0" TextWrapping="Wrap" Text="Compétences" VerticalAlignment="Top"/>
-                <TextBox x:Name="collabSkillInput" HorizontalAlignment="Right" Margin="0,134,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="0.495,0.775" Width="250"/>
+                <TextBlock TextWrapping="Wrap" Text="Prénom" Margin="0,33,0,0"/>
+                <TextBox x:Name="collabFirstNameInput" Width="250" HorizontalAlignment="Right" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="0,39,0,0"/>
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="CV résumé" VerticalAlignment="Top" Margin="0,78,0,0"/>
+                <TextBox x:Name="collabResumeInput" HorizontalAlignment="Right" Margin="0,74,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="0.495,0.775" Width="250" Height="75"/>
+                <TextBlock HorizontalAlignment="Left" Margin="0,169,0,0" TextWrapping="Wrap" Text="Compétences" VerticalAlignment="Top"/>
+                <TextBox x:Name="collabSkillInput" HorizontalAlignment="Right" Margin="0,164,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="0.495,0.775" Width="250"/>
                 <Button x:Name="buttonCollab" Content="Ajouter Collaborateur" Width="154" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,148,53,0" Click="AddCollab"/>
             </Grid>
             <Grid Width="350" Height="245">
