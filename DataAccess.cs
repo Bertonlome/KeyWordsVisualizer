@@ -1,25 +1,24 @@
 ﻿using System;
-using Microsoft.Data.Sqlite;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Azure.Storage;
 using System.Threading.Tasks;
 
 namespace KeyWordsVisualizer
 {
-    internal class DataAccess
+    public static class DataAccess
     {
-        SQLiteConnection dbConnection;
-        SQLiteCommand command;
-        string sqlCommand;
-        string dbPath = System.Environment.CurrentDirectory + "\\DB";
-        string dbFilePath;
-        public void createDbFile()
+        static SQLiteConnection dbConnection;
+        static SQLiteCommand command;
+        static string SQLCommand;
+        static string dbPath = System.Environment.CurrentDirectory + "\\DB";
+        static string dbFilePath;
+        public static void createDbFile()
         {
+            
             if (!string.IsNullOrEmpty(dbPath) && !Directory.Exists(dbPath))
                 Directory.CreateDirectory(dbPath);
             dbFilePath = dbPath + "\\yourDb.db";
@@ -29,7 +28,7 @@ namespace KeyWordsVisualizer
             } 
         }
 
-        public string createDbConnection()
+        public static string createDbConnection()
         {
             string strCon = string.Format("Data Source={0};", dbFilePath);
             dbConnection = new SQLiteConnection(strCon);
@@ -37,19 +36,23 @@ namespace KeyWordsVisualizer
             command = dbConnection.CreateCommand();
             return strCon;
         }
-        public async void InitializeDatabase()
-        { 
-            using (SqliteConnection db = new SqliteConnection($"Filename={dbFilePath}"))
+
+        public async static void InitializeDatabase()
+        {
+            createDbFile();
+            string strCon = createDbConnection();
+            using (SQLiteConnection db = new SQLiteConnection(strCon))
             {
                 db.Open();
 
                 String tableCommand = "CREATE TABLE IF NOT " +
                     "EXISTS Collab (ID INTEGER PRIMARY KEY NOT NULL, " +
                     "Name NVARCHAR(2048) NOT NULL UNIQUE, " +
+                    "FirstName NVARCHAR(2048) NOT NULL, " +
                     "Resume NVARCHAR(2048) NULL " +
                     ")";
 
-                SqliteCommand createTable = new SqliteCommand(tableCommand, db);
+                SQLiteCommand createTable = new SQLiteCommand(tableCommand, db);
 
                 createTable.ExecuteReader(); tableCommand = "CREATE TABLE IF NOT " +
                     "EXISTS Project (ID INTEGER PRIMARY KEY, " +
@@ -57,7 +60,7 @@ namespace KeyWordsVisualizer
                     "Description NVARCHAR(2048) NULL " +
                     ")";
 
-                createTable = new SqliteCommand(tableCommand, db);
+                createTable = new SQLiteCommand(tableCommand, db);
 
                 createTable.ExecuteReader();
 
@@ -67,7 +70,7 @@ namespace KeyWordsVisualizer
                     "Description NVARCHAR(2048) NULL " +
                     ")";
 
-                createTable = new SqliteCommand(tableCommand, db);
+                createTable = new SQLiteCommand(tableCommand, db);
 
                 createTable.ExecuteReader();
 
@@ -75,7 +78,7 @@ namespace KeyWordsVisualizer
                     "EXISTS T_Skills_Collabs (IDCollab INT NOT NULL REFERENCES Collab(ID) ON DELETE CASCADE," +
                     "IDSkill INT NOT NULL REFERENCES Skill(ID) ON DELETE CASCADE)";
 
-                createTable = new SqliteCommand(tableCommand, db);
+                createTable = new SQLiteCommand(tableCommand, db);
 
                 createTable.ExecuteReader();
 
@@ -83,7 +86,7 @@ namespace KeyWordsVisualizer
                     "EXISTS T_Projects_Collabs (IDCollab INT NOT NULL REFERENCES Collab(ID) ON DELETE CASCADE," +
                     "IDProject INT NOT NULL REFERENCES Project(ID) ON DELETE CASCADE)";
 
-                createTable = new SqliteCommand(tableCommand, db);
+                createTable = new SQLiteCommand(tableCommand, db);
 
                 createTable.ExecuteReader();
 
@@ -91,32 +94,33 @@ namespace KeyWordsVisualizer
                     "EXISTS T_Projects_Skills (IDProject INT NOT NULL REFERENCES Project(ID) ON DELETE CASCADE," +
                     "IDSkill INT NOT NULL REFERENCES Skill(ID) ON DELETE CASCADE)";
 
-                createTable = new SqliteCommand(tableCommand, db);
+                createTable = new SQLiteCommand(tableCommand, db);
 
                 createTable.ExecuteReader();
             }
         }
 
-        public List<String> GetCollabList()
+        public static List<String> GetCollabList()
         {
             {
                 List<String> entries = new List<string>();
 
-                using (SqliteConnection db =
-                   new SqliteConnection($"Filename={dbFilePath}"))
+                createDbFile();
+                string strCon = createDbConnection();
+                using (SQLiteConnection db = new SQLiteConnection(strCon))
                 {
                     db.Open();
 
-                    SqliteCommand selectCommand = new SqliteCommand
-                        ("SELECT ID, Name, Resume from Collab", db);
+                    SQLiteCommand selectCommand = new SQLiteCommand
+                        ("SELECT ID, Name, FirstName, Resume from Collab", db);
 
-                    SqliteDataReader query = selectCommand.ExecuteReader();
+                    SQLiteDataReader query = selectCommand.ExecuteReader();
 
                     while (query.Read())
                     {
                         int currentID = query.GetInt32(0);
                         string nameSkill = "";
-                        entries.Add(query.GetString(1) + "  |  " + query.GetString(2));
+                        entries.Add(query.GetString(1) + "  |  " + query.GetString(2) + "  |  " + query.GetString(3));
                         List<String> skillsList = GetSkillsListByCollabId(currentID);
                         string aggregateSkillList = "";
                         foreach (string skill in skillsList)
@@ -141,28 +145,29 @@ namespace KeyWordsVisualizer
             }
         }
 
-        public List<string> GetAllSkillsList()
+        public static List<string> GetAllSkillsList()
         {
             Dictionary<int, string> skillId = new Dictionary<int, string>();
             List<string> skillList = new List<string>();
             List<int> skillsIdList = new List<int>();
 
-            using (SqliteConnection db =
-                new SqliteConnection($"Filename={dbPath}"))
+            createDbFile();
+            string strCon = createDbConnection();
+            using (SQLiteConnection db = new SQLiteConnection(strCon))
             {
                 db.Open();
 
-                SqliteCommand selectCommand = new SqliteCommand
+                SQLiteCommand selectCommand = new SQLiteCommand
                     ("SELECT ID, Name from Skill", db);
 
-                SqliteDataReader query = selectCommand.ExecuteReader();
+                SQLiteDataReader query = selectCommand.ExecuteReader();
 
                 while (query.Read())
                 {
                     skillId.Add(query.GetInt32(0), query.GetString(1));
                 }
 
-                selectCommand = new SqliteCommand("SELECT IDSkill from T_Skills_Collabs", db);
+                selectCommand = new SQLiteCommand("SELECT IDSkill from T_Skills_Collabs", db);
 
                 query = selectCommand.ExecuteReader();
                 while (query.Read())
@@ -170,7 +175,7 @@ namespace KeyWordsVisualizer
                     skillsIdList.Add(query.GetInt32(0));
                 }
 
-                selectCommand = new SqliteCommand("SELECT IDSkill FROM T_Projects_Skills", db);
+                selectCommand = new SQLiteCommand("SELECT IDSkill FROM T_Projects_Skills", db);
 
                 while (query.Read())
                 {
@@ -186,20 +191,21 @@ namespace KeyWordsVisualizer
         }
 
 
-        public int GetCollabByName(string name)
+        public static int GetCollabByName(string name)
         {
             List<int> entries = new List<int>();
             int myId = -1;
-            using (SqliteConnection db =
-               new SqliteConnection($"Filename={dbPath}"))
+            createDbFile();
+            string strCon = createDbConnection();
+            using (SQLiteConnection db = new SQLiteConnection(strCon))
             {
                 db.Open();
 
-                SqliteCommand selectCommand = new SqliteCommand
+                SQLiteCommand selectCommand = new SQLiteCommand
                     ("SELECT * FROM Collab WHERE Name = @name", db);
                 selectCommand.Parameters.AddWithValue("@name", name);
 
-                SqliteDataReader query = selectCommand.ExecuteReader();
+                SQLiteDataReader query = selectCommand.ExecuteReader();
 
                 while (query.Read())
                 {
@@ -211,19 +217,20 @@ namespace KeyWordsVisualizer
 
         }
 
-        public List<String> GetSkillsListByCollabId(int collabId)
+        public static List<String> GetSkillsListByCollabId(int collabId)
         {
             List<String> skillsList = new List<String>();
 
-            using (SqliteConnection db =
-               new SqliteConnection($"Filename={dbPath}"))
+            createDbFile();
+            string strCon = createDbConnection();
+            using (SQLiteConnection db = new SQLiteConnection(strCon))
             {
                 db.Open();
                 List<int> idSkill = new List<int>();
                 string nameSkill = "";
-                SqliteCommand selectSecond = new SqliteCommand("SELECT IDSkill FROM T_Skills_Collabs WHERE IDCollab = @collabID", db);
+                SQLiteCommand selectSecond = new SQLiteCommand("SELECT IDSkill FROM T_Skills_Collabs WHERE IDCollab = @collabID", db);
                 selectSecond.Parameters.AddWithValue("@collabID", collabId);
-                SqliteDataReader querySecond = selectSecond.ExecuteReader();
+                SQLiteDataReader querySecond = selectSecond.ExecuteReader();
                 while (querySecond.Read())
                 {
                     idSkill.Add(querySecond.GetInt32(0));
@@ -231,11 +238,11 @@ namespace KeyWordsVisualizer
                 idSkill = idSkill.Distinct().ToList();
                 foreach (int id in idSkill)
                 {
-                    SqliteCommand selectThird = new SqliteCommand("SELECT Name FROM Skill WHERE ID = @IDSkill", db);
+                    SQLiteCommand selectThird = new SQLiteCommand("SELECT Name FROM Skill WHERE ID = @IDSkill", db);
                     selectThird.Parameters.AddWithValue("@IDSkill", id);
                     try
                     {
-                        SqliteDataReader queryThird = selectThird.ExecuteReader();
+                        SQLiteDataReader queryThird = selectThird.ExecuteReader();
                         while (queryThird.Read())
                         {
                             nameSkill = queryThird.GetString(0);
@@ -252,19 +259,20 @@ namespace KeyWordsVisualizer
 
         }
 
-        public List<String> GetProjectListByCollabId(int collabId)
+        public static List<String> GetProjectListByCollabId(int collabId)
         {
             List<String> projectList = new List<String>();
 
-            using (SqliteConnection db =
-               new SqliteConnection($"Filename={dbPath}"))
+            createDbFile();
+            string strCon = createDbConnection();
+            using (SQLiteConnection db = new SQLiteConnection(strCon))
             {
                 db.Open();
                 List<int> idProject = new List<int>();
                 string nameProject = "";
-                SqliteCommand selectSecond = new SqliteCommand("SELECT IDProject FROM T_Projects_Collabs WHERE IDCollab = @collabID", db);
+                SQLiteCommand selectSecond = new SQLiteCommand("SELECT IDProject FROM T_Projects_Collabs WHERE IDCollab = @collabID", db);
                 selectSecond.Parameters.AddWithValue("@collabID", collabId);
-                SqliteDataReader querySecond = selectSecond.ExecuteReader();
+                SQLiteDataReader querySecond = selectSecond.ExecuteReader();
                 while (querySecond.Read())
                 {
                     idProject.Add(querySecond.GetInt32(0));
@@ -272,11 +280,11 @@ namespace KeyWordsVisualizer
                 idProject = idProject.Distinct().ToList();
                 foreach (int Id in idProject)
                 {
-                    SqliteCommand selectThird = new SqliteCommand("SELECT Name FROM Project WHERE ID = @IDProject", db);
+                    SQLiteCommand selectThird = new SQLiteCommand("SELECT Name FROM Project WHERE ID = @IDProject", db);
                     selectThird.Parameters.AddWithValue("@IDProject", Id);
                     try
                     {
-                        SqliteDataReader queryThird = selectThird.ExecuteReader();
+                        SQLiteDataReader queryThird = selectThird.ExecuteReader();
                         while (queryThird.Read())
                         {
                             nameProject = queryThird.GetString(0);
@@ -293,19 +301,20 @@ namespace KeyWordsVisualizer
 
         }
 
-        public int GetProjectByName(string name)
+        public static int GetProjectByName(string name)
         {
             int myId = -1;
-            using (SqliteConnection db =
-               new SqliteConnection($"Filename={dbPath}"))
+            createDbFile();
+            string strCon = createDbConnection();
+            using (SQLiteConnection db = new SQLiteConnection(strCon))
             {
                 db.Open();
 
-                SqliteCommand selectCommand = new SqliteCommand
+                SQLiteCommand selectCommand = new SQLiteCommand
                     ("SELECT ID FROM Project WHERE Name = @nameEntry", db);
                 selectCommand.Parameters.AddWithValue("@nameEntry", name);
 
-                SqliteDataReader query = selectCommand.ExecuteReader();
+                SQLiteDataReader query = selectCommand.ExecuteReader();
 
                 while (query.Read())
                 {
@@ -316,19 +325,20 @@ namespace KeyWordsVisualizer
             return myId;
 
         }
-        public int GetSkillByName(string name)
+        public static int GetSkillByName(string name)
         {
             int myId = -1;
-            using (SqliteConnection db =
-               new SqliteConnection($"Filename={dbPath}"))
+            createDbFile();
+            string strCon = createDbConnection();
+            using (SQLiteConnection db = new SQLiteConnection(strCon))
             {
                 db.Open();
 
-                SqliteCommand selectCommand = new SqliteCommand
+                SQLiteCommand selectCommand = new SQLiteCommand
                     ("SELECT ID FROM Skill WHERE Name = @nameEntry", db);
                 selectCommand.Parameters.AddWithValue("@nameEntry", name);
 
-                SqliteDataReader query = selectCommand.ExecuteReader();
+                SQLiteDataReader query = selectCommand.ExecuteReader();
 
                 while (query.Read())
                 {
@@ -342,22 +352,24 @@ namespace KeyWordsVisualizer
         }
 
 
-        public void AddCollab(Collab myCollab, string[] skillName)
+        public static void AddCollab(Collab myCollab, string[] skillName)
         {
             {
-                using (SqliteConnection db =
-                  new SqliteConnection($"Filename={dbPath}"))
+                createDbFile();
+                string strCon = createDbConnection();
+                using (SQLiteConnection db = new SQLiteConnection(strCon))
                 {
                     db.Open();
 
                     if (CollabExist(myCollab.Name) == false)
                     {
-                        SqliteCommand insertCommand = new SqliteCommand();
+                        SQLiteCommand insertCommand = new SQLiteCommand();
                         insertCommand.Connection = db;
 
                         // Use parameterized query to prevent SQL injection attacks
-                        insertCommand.CommandText = "INSERT INTO Collab VALUES (NULL, @nameEntry, @resumeEntry);";
+                        insertCommand.CommandText = "INSERT INTO Collab VALUES (NULL, @nameEntry, @firstNameEntry, @resumeEntry);";
                         insertCommand.Parameters.AddWithValue("@nameEntry", myCollab.Name);
+                        insertCommand.Parameters.AddWithValue("@firstNameEntry", myCollab.FirstName);
                         insertCommand.Parameters.AddWithValue("@resumeEntry", myCollab.Resume);
 
                         insertCommand.ExecuteReader();
@@ -370,7 +382,7 @@ namespace KeyWordsVisualizer
                             bool isSkillExist = SkillExist(skillName[i]);
                             if (isSkillExist == false)
                             {
-                                SqliteCommand insertCommandSkill = new SqliteCommand();
+                                SQLiteCommand insertCommandSkill = new SQLiteCommand();
                                 insertCommandSkill.Connection = db;
 
                                 // Use parameterized query to prevent SQL injection attacks
@@ -385,7 +397,7 @@ namespace KeyWordsVisualizer
                             int collabId = GetCollabByName(myCollab.Name);
 
 
-                            SqliteCommand insertCommand = new SqliteCommand();
+                            SQLiteCommand insertCommand = new SQLiteCommand();
                             insertCommand.Connection = db;
 
                             insertCommand.CommandText = "INSERT INTO T_Skills_Collabs VALUES (@collabID, @skillID);";
@@ -400,16 +412,17 @@ namespace KeyWordsVisualizer
             }
         }
 
-        public bool SkillExist(string skillName)
+        public static bool SkillExist(string skillName)
         {
             bool isExisting = false;
             {
-                using (SqliteConnection db =
-                  new SqliteConnection($"Filename={dbPath}"))
+                createDbFile();
+                string strCon = createDbConnection();
+                using (SQLiteConnection db = new SQLiteConnection(strCon))
                 {
                     db.Open();
 
-                    SqliteCommand insertCommand = new SqliteCommand();
+                    SQLiteCommand insertCommand = new SQLiteCommand();
                     insertCommand.Connection = db;
 
                     int skill = GetSkillByName(skillName);
@@ -428,15 +441,17 @@ namespace KeyWordsVisualizer
             return isExisting;
         }
 
-        public bool CollabExist(string collabName)
+        public static bool CollabExist(string collabName)
         {
             bool isExisting = false;
             {
-                using (SqliteConnection db = new SqliteConnection($"Filename={dbPath}"))
+                createDbFile();
+                string strCon = createDbConnection();
+                using (SQLiteConnection db = new SQLiteConnection(strCon))
                 {
                     db.Open();
 
-                    SqliteCommand insertCommand = new SqliteCommand();
+                    SQLiteCommand insertCommand = new SQLiteCommand();
                     insertCommand.Connection = db;
 
                     int collab = GetCollabByName(collabName);
@@ -455,16 +470,17 @@ namespace KeyWordsVisualizer
             return isExisting;
         }
 
-        public bool projectExist(string projectName)
+        public static bool projectExist(string projectName)
         {
             bool isExisting = false;
             {
-                using (SqliteConnection db =
-                  new SqliteConnection($"Filename={dbPath}"))
+                createDbFile();
+                string strCon = createDbConnection();
+                using (SQLiteConnection db = new SQLiteConnection(strCon))
                 {
                     db.Open();
 
-                    SqliteCommand insertCommand = new SqliteCommand();
+                    SQLiteCommand insertCommand = new SQLiteCommand();
                     insertCommand.Connection = db;
 
                     int project = GetProjectByName(projectName);
@@ -483,15 +499,16 @@ namespace KeyWordsVisualizer
             return isExisting;
         }
 
-        public void AddProject(Project myProject, string[] collabName)
+        public static void AddProject(Project myProject, string[] collabName)
         {
             {
-                using (SqliteConnection db =
-                  new SqliteConnection($"Filename={dbPath}"))
+                createDbFile();
+                string strCon = createDbConnection();
+                using (SQLiteConnection db = new SQLiteConnection(strCon))
                 {
                     db.Open();
 
-                    SqliteCommand insertCommand = new SqliteCommand();
+                    SQLiteCommand insertCommand = new SQLiteCommand();
                     insertCommand.Connection = db;
 
                     if (projectExist(myProject.Name) == false)
@@ -509,7 +526,7 @@ namespace KeyWordsVisualizer
                     for (int i = 0; i < collabName.Length; i++)
                     {
                         int collabId = GetCollabByName(collabName[i]);
-                        insertCommand = new SqliteCommand();
+                        insertCommand = new SQLiteCommand();
                         insertCommand.Connection = db;
 
 
@@ -524,15 +541,16 @@ namespace KeyWordsVisualizer
             }
         }
 
-        public void AddSkill(Skill mySkill, string[] collabName, string[] projectName)
+        public static void AddSkill(Skill mySkill, string[] collabName, string[] projectName)
         {
             {
-                using (SqliteConnection db =
-                  new SqliteConnection($"Filename={dbPath}"))
+                createDbFile();
+                string strCon = createDbConnection();
+                using (SQLiteConnection db = new SQLiteConnection(strCon))
                 {
                     db.Open();
 
-                    SqliteCommand insertCommand = new SqliteCommand();
+                    SQLiteCommand insertCommand = new SQLiteCommand();
                     insertCommand.Connection = db;
 
                     if (SkillExist(mySkill.Name) == false)
@@ -550,7 +568,7 @@ namespace KeyWordsVisualizer
                     {
                         int collabId = GetCollabByName(collabName[i]);
 
-                        insertCommand = new SqliteCommand();
+                        insertCommand = new SQLiteCommand();
                         insertCommand.Connection = db;
 
 
@@ -565,7 +583,7 @@ namespace KeyWordsVisualizer
                     for (int i = 0; i < projectName.Length; i++)
                     {
                         int projectId = GetProjectByName(projectName[i]);
-                        insertCommand = new SqliteCommand();
+                        insertCommand = new SQLiteCommand();
                         insertCommand.Connection = db;
 
 
@@ -581,14 +599,15 @@ namespace KeyWordsVisualizer
 
         }
 
-        public void SuppCollab(string collabName)
+        public static void SuppCollab(string collabName)
         {
-            using (SqliteConnection db =
-                new SqliteConnection($"Filename={dbPath}"))
+            createDbFile();
+            string strCon = createDbConnection();
+            using (SQLiteConnection db = new SQLiteConnection(strCon))
             {
                 db.Open();
 
-                SqliteCommand insertCommand = new SqliteCommand();
+                SQLiteCommand insertCommand = new SQLiteCommand();
                 insertCommand.Connection = db;
 
                 insertCommand.CommandText = "DELETE FROM Collab WHERE Name = @collabName";

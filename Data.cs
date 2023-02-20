@@ -12,8 +12,9 @@ namespace KeyWordsVisualizer
         public int Id { get; set; }
         public DateTime DateSave { get; set; }
         public string Name { get; set; }
+        public string FirstName { get; set; }
         public string Resume { get; set; }
-        public string Service { get; set; }
+        public Service Service { get; set; }
 
         // [OneToMany(CascadeOperations = CascadeOperation.All)]
         public List<Project> Projects { get; set; }
