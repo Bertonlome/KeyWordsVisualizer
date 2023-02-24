@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace KeyWordsVisualizer
 {
@@ -102,47 +103,52 @@ namespace KeyWordsVisualizer
 
         public static List<String> GetCollabList()
         {
+            
+            List<String> entries = new List<string>();
+
+            createDbFile();
+            string strCon = createDbConnection();
+            using (SQLiteConnection db = new SQLiteConnection(strCon))
             {
-                List<String> entries = new List<string>();
+                db.Open();
 
-                createDbFile();
-                string strCon = createDbConnection();
-                using (SQLiteConnection db = new SQLiteConnection(strCon))
+                SQLiteCommand selectCommand = new SQLiteCommand
+                    ("SELECT ID, Name, FirstName, service, Resume from Collab", db);
+
+                SQLiteDataReader query = selectCommand.ExecuteReader();
+
+                while (query.Read())
                 {
-                    db.Open();
-
-                    SQLiteCommand selectCommand = new SQLiteCommand
-                        ("SELECT ID, Name, FirstName, Resume from Collab", db);
-
-                    SQLiteDataReader query = selectCommand.ExecuteReader();
-
-                    while (query.Read())
+                    int currentID = query.GetInt32(0);
+                    string nameSkill = "";
+                    entries.Add(query.GetString(1) + "  |  " + query.GetString(2) + "  |  " + query.GetString(3) + "  |  " + query.GetString(4));
+                    string service1 = query.GetString(3);
+                    if (service1 =="")
                     {
-                        int currentID = query.GetInt32(0);
-                        string nameSkill = "";
-                        entries.Add(query.GetString(1) + "  |  " + query.GetString(2) + "  |  " + query.GetString(3));
-                        List<String> skillsList = GetSkillsListByCollabId(currentID);
-                        string aggregateSkillList = "";
-                        foreach (string skill in skillsList)
-                        {
-                            aggregateSkillList += skill;
-                        }
-                        entries.Add("Compétences : " + aggregateSkillList);
-                        List<String> projectList = GetProjectListByCollabId(currentID);
-                        string aggregateProjectList = "";
-                        foreach (string project in projectList)
-                        {
-                            aggregateProjectList += project;
-                        }
-                        entries.Add("Projets : " + aggregateProjectList);
-                        entries.Add("-----------------------------------");
+                        MessageBox.Show("Vous devez rentrer un service pour un collaborateur, veuillez rajouter un service à ce collaborateur.", "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
-
+                    List<String> skillsList = GetSkillsListByCollabId(currentID);
+                    string aggregateSkillList = "";
+                    foreach (string skill in skillsList)
+                    {
+                        aggregateSkillList += skill;
+                    }
+                    entries.Add("Compétences : " + aggregateSkillList);
+                    List<String> projectList = GetProjectListByCollabId(currentID);
+                    string aggregateProjectList = "";
+                    foreach (string project in projectList)
+                    {
+                        aggregateProjectList += project;
+                    }
+                    entries.Add("Projets : " + aggregateProjectList);
+                    entries.Add("-----------------------------------");
                 }
 
-                return entries;
-
             }
+
+            return entries;
+
+            
         }
 
         public static List<string> GetAllSkillsList()
@@ -367,9 +373,10 @@ namespace KeyWordsVisualizer
                         insertCommand.Connection = db;
 
                         // Use parameterized query to prevent SQL injection attacks
-                        insertCommand.CommandText = "INSERT INTO Collab VALUES (NULL, @nameEntry, @firstNameEntry, @resumeEntry);";
+                        insertCommand.CommandText = "INSERT INTO Collab VALUES (NULL, @nameEntry, @firstNameEntry, @serviceEntry, @resumeEntry);";
                         insertCommand.Parameters.AddWithValue("@nameEntry", myCollab.Name);
                         insertCommand.Parameters.AddWithValue("@firstNameEntry", myCollab.FirstName);
+                        insertCommand.Parameters.AddWithValue("@serviceEntry", myCollab.service);
                         insertCommand.Parameters.AddWithValue("@resumeEntry", myCollab.Resume);
 
                         insertCommand.ExecuteReader();

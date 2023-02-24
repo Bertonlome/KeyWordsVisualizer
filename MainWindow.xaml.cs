@@ -21,9 +21,12 @@ namespace KeyWordsVisualizer
     /// </summary>
     public sealed partial class MainWindow : Window
     {
+        public string[] service { get; set; }
         public MainWindow()
         {
             this.InitializeComponent();
+            service = new string[] { "Estia_Tech", "Estia_Recherche", "CompositAdour", "Addimadour", "Estia_Entreprendre", "Scolarité", "Formation" };
+            DataContext = this;
             DataAccess.InitializeDatabase();
             //Output.ItemsSource = DataAccess.GetCollabList();
         }
@@ -33,6 +36,7 @@ namespace KeyWordsVisualizer
             {
                 Name = collabNameInput.Text,
                 FirstName = collabFirstNameInput.Text,
+                service = collabServiceInput.Text,
                 Resume = collabResumeInput.Text,
             };
 
@@ -44,6 +48,7 @@ namespace KeyWordsVisualizer
 
             collabNameInput.Text = "";
             collabFirstNameInput.Text = "";
+            collabServiceInput.Text = "";
             collabResumeInput.Text = "";
             collabSkillInput.Text = "";
         }

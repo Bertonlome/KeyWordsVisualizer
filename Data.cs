@@ -14,7 +14,7 @@ namespace KeyWordsVisualizer
         public string Name { get; set; }
         public string FirstName { get; set; }
         public string Resume { get; set; }
-        public Service Service { get; set; }
+        public string service { get; set; }
 
         // [OneToMany(CascadeOperations = CascadeOperation.All)]
         public List<Project> Projects { get; set; }
@@ -44,15 +44,5 @@ namespace KeyWordsVisualizer
         public string Name { get; set; }
         public string Description { get; set; }
     }
-
-    public enum Service
-    {
-        Estia_Tech,
-        Estia_Recherche,
-        CompositAdour,
-        Addimadour,
-        Estia_Entreprendre,
-        Scolarité,
-        Formation,
-    }
 }
+
