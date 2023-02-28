@@ -36,7 +36,7 @@ namespace KeyWordsVisualizer
             {
                 Name = collabNameInput.Text,
                 FirstName = collabFirstNameInput.Text,
-                service = collabServiceInput.Text,
+                Service = collabServiceInput.Text,
                 Resume = collabResumeInput.Text,
             };
 
@@ -107,6 +107,21 @@ namespace KeyWordsVisualizer
             //this.Name.Navigate(typeof(WordCloudPage));
         }
 
+        private void FiltreService(object sender, RoutedEventArgs e)
+        {
+            
+            Output.ItemsSource = DataAccess.GetCollabListByService(filtreServiceInput.Text);
+
+            filtreServiceInput.Text = "";
+        }
+
+        private void FiltreServiceAll(object sender, RoutedEventArgs e)
+        {
+
+            Output.ItemsSource = DataAccess.GetCollabList();
+        }
+
     }
+
 }
 

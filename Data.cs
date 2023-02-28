@@ -14,7 +14,7 @@ namespace KeyWordsVisualizer
         public string Name { get; set; }
         public string FirstName { get; set; }
         public string Resume { get; set; }
-        public string service { get; set; }
+        public string Service { get; set; }
 
         // [OneToMany(CascadeOperations = CascadeOperation.All)]
         public List<Project> Projects { get; set; }

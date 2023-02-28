@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Xml.Linq;
 
 namespace KeyWordsVisualizer
 {
@@ -19,14 +20,14 @@ namespace KeyWordsVisualizer
         static string dbFilePath;
         public static void createDbFile()
         {
-            
+
             if (!string.IsNullOrEmpty(dbPath) && !Directory.Exists(dbPath))
                 Directory.CreateDirectory(dbPath);
             dbFilePath = dbPath + "\\yourDb.db";
             if (!System.IO.File.Exists(dbFilePath))
             {
                 SQLiteConnection.CreateFile(dbFilePath);
-            } 
+            }
         }
 
         public static string createDbConnection()
@@ -50,6 +51,7 @@ namespace KeyWordsVisualizer
                     "EXISTS Collab (ID INTEGER PRIMARY KEY NOT NULL, " +
                     "Name NVARCHAR(2048) NOT NULL UNIQUE, " +
                     "FirstName NVARCHAR(2048) NOT NULL, " +
+                    "Service NVARCHAR(2048) NOT NULL," +
                     "Resume NVARCHAR(2048) NULL " +
                     ")";
 
@@ -103,7 +105,7 @@ namespace KeyWordsVisualizer
 
         public static List<String> GetCollabList()
         {
-            
+
             List<String> entries = new List<string>();
 
             createDbFile();
@@ -113,7 +115,7 @@ namespace KeyWordsVisualizer
                 db.Open();
 
                 SQLiteCommand selectCommand = new SQLiteCommand
-                    ("SELECT ID, Name, FirstName, service, Resume from Collab", db);
+                    ("SELECT ID, Name, FirstName, Service, Resume from Collab", db);
 
                 SQLiteDataReader query = selectCommand.ExecuteReader();
 
@@ -123,9 +125,9 @@ namespace KeyWordsVisualizer
                     string nameSkill = "";
                     entries.Add(query.GetString(1) + "  |  " + query.GetString(2) + "  |  " + query.GetString(3) + "  |  " + query.GetString(4));
                     string service1 = query.GetString(3);
-                    if (service1 =="")
+                    if (service1.Length == 0)
                     {
-                        MessageBox.Show("Vous devez rentrer un service pour un collaborateur, veuillez rajouter un service à ce collaborateur.", "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Vous devez rentrer un service pour un collaborateur, veuillez supprimer ce collaborateur et rajouter un service.", "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     List<String> skillsList = GetSkillsListByCollabId(currentID);
                     string aggregateSkillList = "";
@@ -148,7 +150,7 @@ namespace KeyWordsVisualizer
 
             return entries;
 
-            
+
         }
 
         public static List<string> GetAllSkillsList()
@@ -367,6 +369,7 @@ namespace KeyWordsVisualizer
                 {
                     db.Open();
 
+
                     if (CollabExist(myCollab.Name) == false)
                     {
                         SQLiteCommand insertCommand = new SQLiteCommand();
@@ -376,7 +379,7 @@ namespace KeyWordsVisualizer
                         insertCommand.CommandText = "INSERT INTO Collab VALUES (NULL, @nameEntry, @firstNameEntry, @serviceEntry, @resumeEntry);";
                         insertCommand.Parameters.AddWithValue("@nameEntry", myCollab.Name);
                         insertCommand.Parameters.AddWithValue("@firstNameEntry", myCollab.FirstName);
-                        insertCommand.Parameters.AddWithValue("@serviceEntry", myCollab.service);
+                        insertCommand.Parameters.AddWithValue("@serviceEntry", myCollab.Service);
                         insertCommand.Parameters.AddWithValue("@resumeEntry", myCollab.Resume);
 
                         insertCommand.ExecuteReader();
@@ -621,6 +624,57 @@ namespace KeyWordsVisualizer
                 insertCommand.Parameters.AddWithValue("@collabName", collabName);
                 insertCommand.ExecuteReader();
             }
+
+        }
+
+        public static List<String> GetCollabListByService(string collabService)
+        {
+
+            List<String> entries = new List<string>();
+
+            createDbFile();
+            string strCon = createDbConnection();
+            using (SQLiteConnection db = new SQLiteConnection(strCon))
+            {
+                db.Open();
+
+                SQLiteCommand selectCommand = new SQLiteCommand
+                    ("SELECT ID, Name, FirstName, Service, Resume from Collab WHERE Service = @collabService", db);
+                selectCommand.Parameters.AddWithValue("@collabService", collabService);
+
+                SQLiteDataReader query = selectCommand.ExecuteReader();
+
+                while (query.Read())
+                {
+                    int currentID = query.GetInt32(0);
+                    string nameSkill = "";
+                    entries.Add(query.GetString(1) + "  |  " + query.GetString(2) + "  |  " + query.GetString(3) + "  |  " + query.GetString(4));
+                    string service1 = query.GetString(3);
+                    if (service1.Length == 0)
+                    {
+                        MessageBox.Show("Vous devez rentrer un service pour un collaborateur, veuillez supprimer ce collaborateur et rajouter un service.", "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    List<String> skillsList = GetSkillsListByCollabId(currentID);
+                    string aggregateSkillList = "";
+                    foreach (string skill in skillsList)
+                    {
+                        aggregateSkillList += skill;
+                    }
+                    entries.Add("Compétences : " + aggregateSkillList);
+                    List<String> projectList = GetProjectListByCollabId(currentID);
+                    string aggregateProjectList = "";
+                    foreach (string project in projectList)
+                    {
+                        aggregateProjectList += project;
+                    }
+                    entries.Add("Projets : " + aggregateProjectList);
+                    entries.Add("-----------------------------------");
+                }
+
+            }
+
+            return entries;
+
 
         }
 
