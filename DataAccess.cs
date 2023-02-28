@@ -620,8 +620,8 @@ namespace KeyWordsVisualizer
                 SQLiteCommand insertCommand = new SQLiteCommand();
                 insertCommand.Connection = db;
 
-                insertCommand.CommandText = "DELETE FROM Collab WHERE Name = @collabName";
-                insertCommand.Parameters.AddWithValue("@collabName", collabName);
+                insertCommand.CommandText = "DELETE FROM Collab WHERE Name = @nameEntry";
+                insertCommand.Parameters.AddWithValue("@nameEntry", collabName);
                 insertCommand.ExecuteReader();
             }
 
@@ -649,11 +649,6 @@ namespace KeyWordsVisualizer
                     int currentID = query.GetInt32(0);
                     string nameSkill = "";
                     entries.Add(query.GetString(1) + "  |  " + query.GetString(2) + "  |  " + query.GetString(3) + "  |  " + query.GetString(4));
-                    string service1 = query.GetString(3);
-                    if (service1.Length == 0)
-                    {
-                        MessageBox.Show("Vous devez rentrer un service pour un collaborateur, veuillez supprimer ce collaborateur et rajouter un service.", "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
                     List<String> skillsList = GetSkillsListByCollabId(currentID);
                     string aggregateSkillList = "";
                     foreach (string skill in skillsList)
