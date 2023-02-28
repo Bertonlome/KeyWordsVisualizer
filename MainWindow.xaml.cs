@@ -97,6 +97,8 @@ namespace KeyWordsVisualizer
         {
             DataAccess.SuppCollab(suppCollabInput.Text);
 
+            Output.ItemsSource = DataAccess.GetCollabList();
+
             suppCollabInput.Text = "";
         }
 

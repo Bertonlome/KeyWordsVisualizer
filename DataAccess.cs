@@ -115,7 +115,7 @@ namespace KeyWordsVisualizer
                 db.Open();
 
                 SQLiteCommand selectCommand = new SQLiteCommand
-                    ("SELECT ID, Name, FirstName, Service, Resume from Collab", db);
+                    ("SELECT ID, Name, FirstName, Service, Resume FROM Collab ORDER BY Name", db);
 
                 SQLiteDataReader query = selectCommand.ExecuteReader();
 
@@ -620,8 +620,8 @@ namespace KeyWordsVisualizer
                 SQLiteCommand insertCommand = new SQLiteCommand();
                 insertCommand.Connection = db;
 
-                insertCommand.CommandText = "DELETE FROM Collab WHERE Name = @nameEntry";
-                insertCommand.Parameters.AddWithValue("@nameEntry", collabName);
+                insertCommand.CommandText = "DELETE FROM Collab WHERE Name = @collabName";
+                insertCommand.Parameters.AddWithValue("@collabName", collabName);
                 insertCommand.ExecuteReader();
             }
 
