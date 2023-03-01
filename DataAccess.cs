@@ -123,7 +123,9 @@ namespace KeyWordsVisualizer
                 {
                     int currentID = query.GetInt32(0);
                     string nameSkill = "";
-                    entries.Add(query.GetString(1) + "  |  " + query.GetString(2) + "  |  " + query.GetString(3) + "  |  " + query.GetString(4));
+                    string nom1 = query.GetString(1);
+                    string NewString = nom1.Replace(" ", String.Empty);
+                    entries.Add(NewString + "  |  " + query.GetString(2) + "  |  " + query.GetString(3) + "  |  " + query.GetString(4));
                     string service1 = query.GetString(3);
                     if (service1.Length == 0)
                     {
@@ -369,15 +371,16 @@ namespace KeyWordsVisualizer
                 {
                     db.Open();
 
+                    string nomCorrect = myCollab.Name.Replace(" ", String.Empty);
 
-                    if (CollabExist(myCollab.Name) == false)
+                    if (CollabExist(nomCorrect) == false)
                     {
                         SQLiteCommand insertCommand = new SQLiteCommand();
                         insertCommand.Connection = db;
 
                         // Use parameterized query to prevent SQL injection attacks
                         insertCommand.CommandText = "INSERT INTO Collab VALUES (NULL, @nameEntry, @firstNameEntry, @serviceEntry, @resumeEntry);";
-                        insertCommand.Parameters.AddWithValue("@nameEntry", myCollab.Name);
+                        insertCommand.Parameters.AddWithValue("@nameEntry", nomCorrect);
                         insertCommand.Parameters.AddWithValue("@firstNameEntry", myCollab.FirstName);
                         insertCommand.Parameters.AddWithValue("@serviceEntry", myCollab.Service);
                         insertCommand.Parameters.AddWithValue("@resumeEntry", myCollab.Resume);

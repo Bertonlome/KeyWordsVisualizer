@@ -62,7 +62,7 @@
         <Grid Grid.Row="3" Width="350" Height="75" Margin="0,25,1050,0">
             <TextBlock Text="Filtre" TextWrapping="Wrap"/>
             <TextBox x:Name="filtreServiceInput" HorizontalAlignment="Right" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="0,2,0,0" Width="250"/>
-            <Button x:Name="buttonFiltre" Content="Filtre les collaborateurs" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="FiltreService" Margin="0,0,30,0"/>
+            <Button x:Name="buttonFiltre" Content="Filtrer les collaborateurs" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="FiltreService" Margin="0,0,30,0"/>
             <Button x:Name="buttonFiltre1" Content="All" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="FiltreServiceAll"/>
         </Grid>
         <TextBlock Grid.Row="4" Text="Collaborateurs" TextWrapping="Wrap" Margin="0,25,0,0"/>
