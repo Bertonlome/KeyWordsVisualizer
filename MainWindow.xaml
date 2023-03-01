@@ -53,14 +53,17 @@
                 <Button x:Name="buttonSupp" Content="Supprimer un collaborateur" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,148,53,0" Click="SuppCollab"/>
             </Grid>
         </WrapPanel>
-        <TextBlock Grid.Row="3" Text="Collaborateurs" TextWrapping="Wrap"/>
-        <ListView Name="Output" Grid.Row="4" Height="300">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding}"/>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
         <Button Content="Visualisation du nuage de compétence" VerticalAlignment="Top" HorizontalAlignment="Center" Width="500" Click="Button_Click"/>
+        <Grid>
+            <DataGrid Name="affich1" AlternatingRowBackground = "LightBlue"  
+         AlternationCount = "2" AutoGenerateColumns = "False" Margin="10">
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header = "Name" Binding = "{Binding }" />
+                    <DataGridTextColumn Header = "Project" Binding = "{Binding }" />
+                </DataGrid.Columns>
+
+            </DataGrid>
+        </Grid>
     </Grid>
 </Window>

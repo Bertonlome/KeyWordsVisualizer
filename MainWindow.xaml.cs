@@ -19,13 +19,15 @@ namespace KeyWordsVisualizer
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
-    public sealed partial class MainWindow : Window
+    public  partial class MainWindow : Window
     {
+
         public MainWindow()
         {
             this.InitializeComponent();
             DataAccess.InitializeDatabase();
-            //Output.ItemsSource = DataAccess.GetCollabList();
+            //affich1.ItemsSource = DataAccess.GetCollabList();
+            
         }
         private void AddCollab(object sender, RoutedEventArgs e)
         {
@@ -39,7 +41,7 @@ namespace KeyWordsVisualizer
 
             DataAccess.AddCollab(myCollab, skillName);
 
-            Output.ItemsSource = DataAccess.GetCollabList();
+            affich1.ItemsSource = DataAccess.GetCollabList();
 
             collabNameInput.Text = "";
             collabResumeInput.Text = "";
@@ -57,7 +59,7 @@ namespace KeyWordsVisualizer
 
             DataAccess.AddProject(myProject, collabName);
 
-            Output.ItemsSource = DataAccess.GetCollabList();
+            affich1.ItemsSource = DataAccess.GetCollabList();
 
             projectNameInput.Text = "";
             ProjectCollabName.Text = "";
@@ -77,7 +79,7 @@ namespace KeyWordsVisualizer
 
             DataAccess.AddSkill(mySkill, collabName, projectName);
 
-            Output.ItemsSource = DataAccess.GetCollabList();
+            affich1.ItemsSource = DataAccess.GetCollabList();
 
             skillNameInput.Text = "";
             skillDescInput.Text = "";
@@ -90,7 +92,7 @@ namespace KeyWordsVisualizer
         {
             DataAccess.SuppCollab(suppCollabInput.Text);
 
-            Output.ItemsSource = DataAccess.GetCollabList();
+            affich1.ItemsSource = DataAccess.GetCollabList();
 
             suppCollabInput.Text = "";
         }
