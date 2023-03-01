@@ -59,12 +59,22 @@
                 <Button x:Name="buttonSupp" Content="Supprimer un collaborateur" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,148,53,0" Click="SuppCollab"/>
             </Grid>
         </WrapPanel>
-        <Grid Grid.Row="3" Width="350" Height="75" Margin="0,25,1050,0">
-            <TextBlock Text="Filtre" TextWrapping="Wrap"/>
-            <TextBox x:Name="filtreServiceInput" HorizontalAlignment="Right" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="0,2,0,0" Width="250"/>
-            <Button x:Name="buttonFiltre" Content="Filtrer les collaborateurs" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="FiltreService" Margin="0,0,30,0"/>
-            <Button x:Name="buttonFiltre1" Content="All" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="FiltreServiceAll"/>
-        </Grid>
+        <WrapPanel Grid.Row="3">
+            <Grid Width="350" Height="75" Margin="0,25,0,0">
+                <TextBlock Text="Filtre" TextWrapping="Wrap"/>
+                <TextBox x:Name="filtreServiceInput" HorizontalAlignment="Right" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="0,2,0,0" Width="250"/>
+                <Button x:Name="buttonFiltre" Content="Filtrer les collaborateurs" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="FiltreService" Margin="0,0,30,0"/>
+                <Button x:Name="buttonFiltre1" Content="All" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="FiltreServiceAll"/>
+            </Grid>
+            <Grid Width="350" Height="75" Margin="50,25,0,0">
+                <TextBox x:Name="rechercheNameInput" HorizontalAlignment="Right" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="0,2,0,0" Width="250"/>
+                <Button x:Name="buttonRechercheNom" Width="50" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="RechercheCollab"/>
+            </Grid>
+            <Grid Width="350" Height="75" Margin="50,25,0,0">
+                <TextBox x:Name="rechercheSkillInput" HorizontalAlignment="Right" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="0,2,0,0" Width="250"/>
+                <Button x:Name="buttonRechercheSkill" Width="50" Height="33" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="RechercheSkill"/>
+            </Grid>
+        </WrapPanel>
         <TextBlock Grid.Row="4" Text="Collaborateurs" TextWrapping="Wrap" Margin="0,25,0,0"/>
         <ListView Name="Output" Grid.Row="5" Height="300">
             <ListView.ItemTemplate>

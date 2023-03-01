@@ -121,6 +121,20 @@ namespace KeyWordsVisualizer
             Output.ItemsSource = DataAccess.GetCollabList();
         }
 
+        private void RechercheCollab(object sender, RoutedEventArgs e)
+        {
+
+            Output.ItemsSource = DataAccess.GetCollabListByName(rechercheNameInput.Text);
+
+            rechercheNameInput.Text = "";
+        }
+        private void RechercheSkill(object sender, RoutedEventArgs e)
+        {
+
+            Output.ItemsSource = DataAccess.GetCollabListBySkill(rechercheSkillInput.Text);
+
+            rechercheSkillInput.Text = "";
+        }
     }
 
 }

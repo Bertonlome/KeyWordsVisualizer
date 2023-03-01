@@ -675,6 +675,98 @@ namespace KeyWordsVisualizer
 
 
         }
+        public static List<String> GetCollabListByName(string collabName)
+        {
+
+            List<String> entries = new List<string>();
+
+            createDbFile();
+            string strCon = createDbConnection();
+            using (SQLiteConnection db = new SQLiteConnection(strCon))
+            {
+                db.Open();
+
+                SQLiteCommand selectCommand = new SQLiteCommand
+                    ("SELECT ID, Name, FirstName, Service, Resume from Collab WHERE Name = @collabName", db);
+                selectCommand.Parameters.AddWithValue("@collabName", collabName);
+
+                SQLiteDataReader query = selectCommand.ExecuteReader();
+
+                while (query.Read())
+                {
+                    int currentID = query.GetInt32(0);
+                    string nameSkill = "";
+                    entries.Add(query.GetString(1) + "  |  " + query.GetString(2) + "  |  " + query.GetString(3) + "  |  " + query.GetString(4));
+                    List<String> skillsList = GetSkillsListByCollabId(currentID);
+                    string aggregateSkillList = "";
+                    foreach (string skill in skillsList)
+                    {
+                        aggregateSkillList += skill;
+                    }
+                    entries.Add("Compétences : " + aggregateSkillList);
+                    List<String> projectList = GetProjectListByCollabId(currentID);
+                    string aggregateProjectList = "";
+                    foreach (string project in projectList)
+                    {
+                        aggregateProjectList += project;
+                    }
+                    entries.Add("Projets : " + aggregateProjectList);
+                    entries.Add("-----------------------------------");
+                }
+
+            }
+
+            return entries;
+
+
+        }
+        public static List<String> GetCollabListBySkill(string SkillName)
+        {
+
+            List<String> entries = new List<string>();
+
+            createDbFile();
+            string strCon = createDbConnection();
+            using (SQLiteConnection db = new SQLiteConnection(strCon))
+            {
+                db.Open();
+
+                int SkillId = GetSkillByName(SkillName);
+
+                SQLiteCommand selectCommand = new SQLiteCommand
+                    ("SELECT ID, Name, FirstName, Service, Resume FROM Collab JOIN T_Skills_Collabs ON T_Skills_Collabs.IDCollab = Collab.ID WHERE T_Skills_Collabs.IDSkill = @skillId", db);
+                selectCommand.Parameters.AddWithValue("@skillId", SkillId);
+
+                SQLiteDataReader query = selectCommand.ExecuteReader();
+
+                while (query.Read())
+                {
+                    int currentID = query.GetInt32(0);
+                    string nameSkill = "";
+                    entries.Add(query.GetString(1) + "  |  " + query.GetString(2) + "  |  " + query.GetString(3) + "  |  " + query.GetString(4));
+                    List<String> skillsList = GetSkillsListByCollabId(currentID);
+                    string aggregateSkillList = "";
+                    foreach (string skill in skillsList)
+                    {
+                        aggregateSkillList += skill;
+                    }
+                    entries.Add("Compétences : " + aggregateSkillList);
+                    List<String> projectList = GetProjectListByCollabId(currentID);
+                    string aggregateProjectList = "";
+                    foreach (string project in projectList)
+                    {
+                        aggregateProjectList += project;
+                    }
+                    entries.Add("Projets : " + aggregateProjectList);
+                    entries.Add("-----------------------------------");
+                }
+
+            }
+
+            return entries;
+
+
+        }
 
     }
 }
