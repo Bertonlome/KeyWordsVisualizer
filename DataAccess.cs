@@ -124,8 +124,10 @@ namespace KeyWordsVisualizer
                     int currentID = query.GetInt32(0);
                     string nameSkill = "";
                     string nom1 = query.GetString(1);
-                    string NewString = nom1.Replace(" ", String.Empty);
-                    entries.Add(NewString + "  |  " + query.GetString(2) + "  |  " + query.GetString(3) + "  |  " + query.GetString(4));
+                    string nomCorrect = nom1.Replace(" ", String.Empty);
+                    List<char> charsToRemove = new List<char>() { '@', '_', ',', '.' };
+                    nomCorrect = nomCorrect.Filter(charsToRemove);
+                    entries.Add(nomCorrect + "  |  " + query.GetString(2) + "  |  " + query.GetString(3) + "  |  " + query.GetString(4));
                     string service1 = query.GetString(3);
                     if (service1.Length == 0)
                     {
@@ -372,6 +374,8 @@ namespace KeyWordsVisualizer
                     db.Open();
 
                     string nomCorrect = myCollab.Name.Replace(" ", String.Empty);
+                    List<char> charsToRemove = new List<char>() { '@', '_', ',', '.' };
+                    nomCorrect = nomCorrect.Filter(charsToRemove);
 
                     if (CollabExist(nomCorrect) == false)
                     {
@@ -687,7 +691,7 @@ namespace KeyWordsVisualizer
                 db.Open();
 
                 SQLiteCommand selectCommand = new SQLiteCommand
-                    ("SELECT ID, Name, FirstName, Service, Resume from Collab WHERE Name = @collabName", db);
+                    ("SELECT * FROM Collab WHERE Name = @collabName", db);
                 selectCommand.Parameters.AddWithValue("@collabName", collabName);
 
                 SQLiteDataReader query = selectCommand.ExecuteReader();
@@ -734,7 +738,7 @@ namespace KeyWordsVisualizer
                 int SkillId = GetSkillByName(SkillName);
 
                 SQLiteCommand selectCommand = new SQLiteCommand
-                    ("SELECT ID, Name, FirstName, Service, Resume FROM Collab JOIN T_Skills_Collabs ON T_Skills_Collabs.IDCollab = Collab.ID WHERE T_Skills_Collabs.IDSkill = @skillId", db);
+                    ("SELECT * FROM Collab JOIN T_Skills_Collabs ON T_Skills_Collabs.IDCollab = Collab.ID WHERE T_Skills_Collabs.IDSkill = @skillId", db);
                 selectCommand.Parameters.AddWithValue("@skillId", SkillId);
 
                 SQLiteDataReader query = selectCommand.ExecuteReader();
@@ -767,6 +771,16 @@ namespace KeyWordsVisualizer
 
 
         }
+        public static string Filter(this string str, List<char> charsToRemove)
+        {
+            foreach (char c in charsToRemove)
+            {
+                str = str.Replace(c.ToString(), String.Empty);
+            }
+
+            return str;
+        }
+
 
     }
 }
