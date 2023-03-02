@@ -125,7 +125,7 @@ namespace KeyWordsVisualizer
                     string nameSkill = "";
                     string nom1 = query.GetString(1);
                     string nomCorrect = nom1.Replace(" ", String.Empty);
-                    List<char> charsToRemove = new List<char>() { '@', '_', ',', '.' };
+                    List<char> charsToRemove = new List<char>() { '@', '_', ',', '.','*','#','+','1','2','3','4','5','6','7','8','9' };
                     nomCorrect = nomCorrect.Filter(charsToRemove);
                     entries.Add(nomCorrect + "  |  " + query.GetString(2) + "  |  " + query.GetString(3) + "  |  " + query.GetString(4));
                     string service1 = query.GetString(3);
@@ -374,7 +374,7 @@ namespace KeyWordsVisualizer
                     db.Open();
 
                     string nomCorrect = myCollab.Name.Replace(" ", String.Empty);
-                    List<char> charsToRemove = new List<char>() { '@', '_', ',', '.' };
+                    List<char> charsToRemove = new List<char>() { '@', '_', ',', '.', '*', '#', '+', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
                     nomCorrect = nomCorrect.Filter(charsToRemove);
 
                     if (CollabExist(nomCorrect) == false)
